@@ -1,20 +1,22 @@
 #!/bin/bash
 
-# Exit on error
-set -e
+# Vault address and token - adjust with your environment's values
+VAULT_ADDR="http://13.126.163.103:8200"  # Replace with your Vault address
+VAULT_TOKEN="hvs.qRBSWDaa78686trd0rpKKGPQ"  # Replace with your Vault token
 
-echo "[INFO] Starting Vault secret write process..."
+# Secret Engine Type (e.g., kv, database, etc.)
+SECRET_ENGINE="kv"
+MOUNT_PATH="test"  # Path where you want to mount the engine
 
-# Set Vault address (change this if needed)
-export VAULT_ADDR="http://52.66.247.151:8200"
+# Authenticate with Vault (can be skipped if token is already set in the environment)
+export VAULT_ADDR=$VAULT_ADDR
+export VAULT_TOKEN=$VAULT_TOKEN
 
-# Login using root token (change for production, use AppRole or token from Jenkins env)
-vault login hvs.6b4a9jVwyduGLrUc4pKILw95
+# Enable the KV Secret Engine (you can choose other engines)
+vault secrets enable -path=$MOUNT_PATH $SECRET_ENGINE
 
-# Put some secrets into Vault
-vault kv put kv/sun username='ashu' password='1234'
+# Example: Write a secret to the engine
+vault kv put $MOUNT_PATH/mysecret key1=ashi key2=1234
 
-# Fetch and display the secret
-vault kv get kv/sun
-
-echo "[SUCCESS] Vault script completed."
+# Optionally verify by reading back the secret
+vault kv get $MOUNT_PATH/mysecret
