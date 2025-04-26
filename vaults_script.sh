@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Vault address and token - adjust with your environment's values
-VAULT_ADDR="http://13.126.163.103:8200"  # Replace with your Vault address
-VAULT_TOKEN="hvs.qRBSWDaa78686trd0rpKKGPQ"  # Replace with your Vault token
+VAULT_ADDR="http://65.0.61.11:8200"  # Replace with your Vault address
+VAULT_TOKEN="hvs.R1moHrfuwVcE36iGizX7Zo4O"  # Replace with your Vault token
 
 # Secret Engine Type (e.g., kv, database, etc.)
 SECRET_ENGINE="kv"
