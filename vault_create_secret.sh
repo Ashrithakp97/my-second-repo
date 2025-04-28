@@ -22,6 +22,8 @@ SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
 if [ "$SECRET_OUTPUT" == "Ashritha" ]; then
   echo "Secret created successfully."
 else
-  echo "Failed to create secret!" >&2
+  echo "Failed to create secret!" >&2  
+  # >&2 :send the message to error output instead of normal output.
   exit 1
+  # Exit the script with error code 1.(o means success, 1,2 means error)
 fi
