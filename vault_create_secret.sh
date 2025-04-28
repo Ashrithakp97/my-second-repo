@@ -5,11 +5,13 @@ set -e
 
 # Vault address and token are expected to be available as environment variables
 VAULT_ADDR="http://43.204.144.100:8200"  # Replace with your Vault address
-VAULT_TOKEN="hvs.ATxShrOK4C90N7bkr1ILFgDE"  # Replace with your Vault token
+VAULT_role="cd4a4536-61b7-6384-1415-2956c7b0602b"  # Replace with your Vault token
+VAULT_secret="1bf8a90a-c2fe-593c-9980-befd915da350"
 
 
 export VAULT_ADDR=$VAULT_ADDR
-export VAULT_TOKEN=$VAULT_TOKEN
+export VAULT_TOKEN=$VAULT_role
+export VAULT_TOKEN=$VAULT_secret
 # Login (optional if Jenkins already authenticates by token)
 
 
