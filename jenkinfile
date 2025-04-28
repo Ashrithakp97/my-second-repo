@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        VAULT_ADDR='${VAULT_ADDR}' // Still asking Vault address from user
+        VAULT_ADDR="${VAULT_ADDR}" // Still asking Vault address from user
     }
    
     stages {
