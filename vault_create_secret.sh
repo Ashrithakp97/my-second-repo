@@ -6,7 +6,10 @@ set -e
 # Vault address and token are expected to be available as environment variables
 
 # Login (optional if Jenkins already authenticates by token)
+echo "Vault Address: $VAULT_ADDR"
 
+VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id="$VAULT_TOKEN" secret_id="$VAULT_TOKEN")
+export VAULT_TOKEN
 
 # Create a new secret in Vault
 vault kv put secret/myapp/config username="Ashritha" password="1234"
