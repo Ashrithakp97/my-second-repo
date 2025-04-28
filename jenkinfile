@@ -3,9 +3,7 @@ pipeline {
     environment {
         VAULT_ADDR = '${params.VAULT_ADDR}'  // Still asking Vault address from user
     }
-    parameters {
-        string(name: 'VAULT_ADDR', defaultValue: 'http://43.204.144.100:8200', description: 'Vault server URL')
-    }
+   
     stages {
         stage('Checkout') {
             steps {
