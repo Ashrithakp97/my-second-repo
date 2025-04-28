@@ -1,39 +1,49 @@
 pipeline {
     agent any
     environment {
-        VAULT_ADDR = '${params.VAULT_ADDR}'
-       VAULT_TOKEN = '${params.VAULT_TOKEN}' // From Jenkins credentials store
+        VAULT_ADDR = '${params.VAULT_ADDR}'  // Still asking Vault address from user
+    }
+    parameters {
+        string(name: 'VAULT_ADDR', defaultValue: 'http://43.204.144.100:8200', description: 'Vault server URL')
     }
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',  //It pulls branch 'main' from the Git repo
-                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'  //It downloads the repo to the Jenkins workspace.
+                git branch: 'main',
+                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
             }
         }
         stage('Create Vault Secret') {
             steps {
-                script {
-                    def result = sh(  //This defines a new variable in Groovy called result.def is just the Groovy way to declare a variable 
-                        script: 'bash vault_create_secret.sh',  // runs a shell command inside Jenkins and bash means run it with the bash interpreter.
-                        returnStatus: true  // Don't fail the build if the script errors. Instead, just return the script’s exit code.
-                    )
-                    
-                    if (result == 0) {
-                        echo "Vault secret creation successful."
-                        currentBuild.result = 'SUCCESS'  // Set the build status to SUCCESS to Jenkins knows the job succeeded
-
-                    } else {
-                        echo "Vault secret creation failed."
-                        currentBuild.result = 'FAILURE'
+                withCredentials([
+                    string(credentialsId: 'VAULT_ROLE_ID', variable: 'VAULT_ROLE_ID'),
+                    string(credentialsId: 'VAULT_SECRET_ID', variable: 'VAULT_SECRET_ID')
+                ]) {
+                    script {
+                        def result = sh(
+                            script: '''
+                                export VAULT_ADDR=${VAULT_ADDR}
+                                export VAULT_ROLE_ID=${VAULT_ROLE_ID}
+                                export VAULT_SECRET_ID=${VAULT_SECRET_ID}
+                                bash vault_create_secret.sh
+                            ''',
+                            returnStatus: true
+                        )
+                        if (result == 0) {
+                            echo "Vault secret creation successful."
+                            currentBuild.result = 'SUCCESS'
+                        } else {
+                            echo "Vault secret creation failed."
+                            currentBuild.result = 'FAILURE'
+                        }
                     }
                 }
             }
         }
     }
     post {
-        always {  // Always run the following steps,whether the build passes or fails.
-            emailext (  // Send an email notification using the Extended Email Plugin (emailext).
+        always {
+            emailext(
                 subject: "Vault Secret Creation Job: ${currentBuild.result}",
                 body: """
                     Hello,
@@ -45,9 +55,9 @@ pipeline {
                     Regards,
                     Jenkins
                 """,
-              //It is a built-in recipient provider in Jenkin and Jenkins finds the developers by itself and emails them, plus any extra email addresses you want.
                 to: 'ashrithakp97@gmail.com'
             )
         }
     }
 }
+
