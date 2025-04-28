@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         VAULT_ADDR = '${params.VAULT_ADDR}'
-       VAULT_TOKEN = "${params.VAULT_TOKEN}" // From Jenkins credentials store
+       VAULT_TOKEN = '${params.VAULT_TOKEN}' // From Jenkins credentials store
     }
     stages {
         stage('Checkout') {
