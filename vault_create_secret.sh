@@ -10,8 +10,8 @@ VAULT_secret="1bf8a90a-c2fe-593c-9980-befd915da350"
 
 
 export VAULT_ADDR=$VAULT_ADDR
-export VAULT_TOKEN=$VAULT_role
-export VAULT_TOKEN=$VAULT_secret
+export VAULT_role=$VAULT_role
+export VAULT_secret=$VAULT_secret
 # Login (optional if Jenkins already authenticates by token)
 
 
