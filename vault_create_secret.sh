@@ -4,8 +4,7 @@
 set -e
 
 # Vault address and token are expected to be available as environment variables
-export VAULT_ADDR = '${params.VAULT_ADDR}'
-       VAULT_TOKEN = '${params.VAULT_TOKEN}'
+
 # Login (optional if Jenkins already authenticates by token)
 
 
