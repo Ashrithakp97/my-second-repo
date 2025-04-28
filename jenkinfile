@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        VAULT_ADDR="http://43.204.144.100:8200"  // Still asking Vault address from user
+        VAULT_ADDR='${params.VAULT_ADDR}' // Still asking Vault address from user
     }
    
     stages {
