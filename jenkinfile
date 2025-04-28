@@ -45,7 +45,7 @@ pipeline {
                     Regards,
                     Jenkins
                 """,
-                recipientProviders: [[$class: 'DevelopersRecipientProvider']],  //It is a built-in recipient provider in Jenkin and Jenkins finds the developers by itself and emails them, plus any extra email addresses you want.
+              //It is a built-in recipient provider in Jenkin and Jenkins finds the developers by itself and emails them, plus any extra email addresses you want.
                 to: 'ashrithakp97@gmail.com'
             )
         }
