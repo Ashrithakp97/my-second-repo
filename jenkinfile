@@ -1,36 +1,118 @@
 pipeline {
-  agent any
 
-  environment {
-    VAULT_ADDR = 'http://13.203.207.76:8200' // Replace with your Vault address
-  }
+    agent any
 
-  stages {
-    stage('Checkout') {
-      steps {
-        git url: 'https://github.com/Ashrithakp97/my-second-repo.git', branch: 'main'
-      }
+    environment {
+
+        VAULT_ADDR="${VAULT_ADDR}" // Still asking Vault address from user
+
     }
 
-    stage('Create Vault Secret') {
-      steps {
-        withVault(
-          configuration: [vaultUrl:"${env.VAULT_ADDR}"],
-                  vaultCredentialId:'testing',
-    vaultSecrets: [
-        ]
-        ) {
-          sh 'chmod +x vault_create_secret.sh && ./vault_create_secret.sh'
+    stages {
+
+        stage('Checkout') {
+
+            steps {
+
+                git branch: 'main',
+
+                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
+
+            }
+
         }
-      }
-    }
-  }
 
-  post {
-    failure {
-      emailext to: 'ashrithakp97@gmail.com',
-               subject: "Vault Secret Creation Failed",
-               body: "Please check the Jenkins logs for details."
+        stage('Create Vault Secret') {
+
+            steps {
+
+  withVault(
+
+    configuration: [
+
+        vaultCredentialId: 'testing',
+
+        vaultUrl: "${VAULT_ADDR}"
+
+    ],
+
+    vaultSecrets: [
+
+        ]
+
+)
+
+               {
+
+                    script {
+
+                        def result = sh(
+
+                            script: '''
+
+                               chmod +x vault_create_secret.sh
+
+                              ./vault_create_secret.sh
+
+                            ''',
+
+                            returnStatus: true  
+
+                        )
+
+                        if (result == 0) {
+
+                            echo "Vault secret creation successful."
+
+                            currentBuild.result = 'SUCCESS'  
+
+                        } else {
+
+                            echo "Vault secret creation failed."
+
+                            currentBuild.result = 'FAILURE'
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
     }
-  }
+
+    post {
+
+        always {
+
+            emailext(
+
+                subject: "Vault Secret Creation Job: ${currentBuild.result}",
+
+                body: """
+
+                    Hello,
+
+                    Vault Secret creation Job Status: ${currentBuild.result}.
+
+                    Please check Jenkins logs for details.
+
+                    Regards,
+
+                    Jenkins
+
+                """,
+
+                to: 'ashrithakp97@gmail.com'
+
+            )
+
+        }
+
+    }
+
 }
+ 
