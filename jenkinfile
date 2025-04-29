@@ -15,7 +15,9 @@ pipeline {
             steps {
 
                 withVault( 
-string(credentialsId: 'testing', variable: 'VAULT_ROLE_ID'),  
+ configuration: [
+                vaultCredentialId: 'testing'  
+            ]  
 )
 {
                     script {
