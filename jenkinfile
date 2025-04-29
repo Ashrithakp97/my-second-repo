@@ -14,22 +14,18 @@ pipeline {
         stage('Create Vault Secret') {
             steps {
 
-                withVault
-( 
-                vaultCredentialId: 'testing'   
-)
-{
-                    script {
-                        def result = sh(
-
-                            script: '''
-                                export VAULT_ADDR=${VAULT_ADDR}    
-                                export VAULT_ROLE_ID=${VAULT_ROLE_ID}
-                                bash vault_create_secret.sh        
-                            ''',
-
-                            returnStatus: true  
-                        )
+                 withVault(
+                    vaultSecrets: [],
+                    vaultConfiguration: [vaultCredentialId: 'testing', vaultUrl: 'https://vault.example.com', engineVersion: 2]
+                ) {
+                    sh '''
+                        chmod +x create_secrets.sh
+                        ./create_secrets.sh
+                    ''',
+returnStatus: true  
+                }
+                            
+                        
                         if (result == 0) {
                             echo "Vault secret creation successful."
 
@@ -41,8 +37,8 @@ pipeline {
                     }
                 }
             }
-        }
-    }
+        
+    
     post {
         always {
             emailext(
