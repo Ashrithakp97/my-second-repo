@@ -1,19 +1,9 @@
 #!/bin/bash
-set -e
 
-echo "Logging into Vault using AppRole..."
-# by using role id and secret id vault is logged in
-VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id="$VAULT_ROLE_ID" secret_id="$VAULT_ROLE_ID")
-# receiving an access pass (the token), which you save in the variable VAULT_TOKEN.
-export VAULT_TOKEN
+# Assumes VAULT_TOKEN is already set by the Jenkins Vault Plugin via withVault
+# and VAULT_ADDR is already set in the environment
 
-vault kv put secret/myapp/config username="Ashritha" password="1234"
+# Enable KV v2 secret engine at path 'secret'
+vault secrets enable -path=secret kv
 
-SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
-
-if [ "$SECRET_OUTPUT" == "Ashritha" ]; then
-  echo "Secret created successfully."
-else
-  echo "Failed to create secret!" >&2  
-  exit 1
-fi
+echo "Secret engine 'secret/' (kv-v2) enabled successfully."
