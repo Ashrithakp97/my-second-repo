@@ -16,11 +16,21 @@ pipeline {
             steps {
                 
                 withVault(
-                    [
-                        vaultCredentialId: 'testing',
-                        vaultAddr: "${VAULT_ADDR}"
-                    ]
-                ) {
+    configuration: [
+        vaultCredentialId: 'testing',
+        vaultUrl: "${VAULT_ADDR}"
+    ],
+    vaultSecrets: [
+        [
+            path: 'auth/approle/role/testrole',
+            secretValues: [
+                [envVar: 'VAULT_ROLE_ID', vaultKey: 'role_id'],
+                [envVar: 'VAULT_SECRET_ID', vaultKey: 'secret_id']
+            ]
+        ]
+    ]
+)
+{
                     // Once authenticated, run your CLI script
                     sh '''
                         echo "Running Vault CLI command to enable secret engine..."
