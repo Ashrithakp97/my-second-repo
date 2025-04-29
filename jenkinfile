@@ -13,22 +13,30 @@ pipeline {
         }
         stage('Create Vault Secret') {
             steps {
+# This is a Jenkins method that securely injects credentials stored in Jenkins into the pipeline.
                 withCredentials([
+# Tells Jenkins to fetch a String credential with ID VAULT_ROLE_ID from the Jenkins credentials store.and That value will be made available as an environment variable named VAULT_ROLE_ID
                     string(credentialsId: 'VAULT_ROLE_ID', variable: 'VAULT_ROLE_ID'),
                     string(credentialsId: 'VAULT_SECRET_ID', variable: 'VAULT_SECRET_ID')
                 ]) {
                     script {
                         def result = sh(
+# This is a multi-line shell script.
                             script: '''
+# Exports the VAULT_ADDR environment variable so it's available to the shell.
                                 export VAULT_ADDR=${VAULT_ADDR}
                                 export VAULT_ROLE_ID=${VAULT_ROLE_ID}
                                 export VAULT_SECRET_ID=${VAULT_SECRET_ID}
+#Executes your custom Bash script that creates secrets in HashiCorp Vault.
                                 bash vault_create_secret.sh
                             ''',
+# Tells Jenkins to not fail the pipeline immediately if the shell script fails.
+#Instead, it will return the exit code (0 = success, anything else = failure) to result.
                             returnStatus: true
                         )
                         if (result == 0) {
                             echo "Vault secret creation successful."
+# Explicitly marks the Jenkins build as successful.
                             currentBuild.result = 'SUCCESS'
                         } else {
                             echo "Vault secret creation failed."
