@@ -21,12 +21,10 @@ pipeline {
                     script {
                         def result = sh(
 
-                            script: '''    
-
+                            script: '''
                                 export VAULT_ADDR=${VAULT_ADDR}    //Exports the VAULT_ADDR environment variable so it's available to the shell.
                                 export VAULT_ROLE_ID=${VAULT_ROLE_ID}
                                 export VAULT_SECRET_ID=${VAULT_SECRET_ID}
-
                                 bash vault_create_secret.sh     // Executes your custom Bash script that creates secrets in HashiCorp Vault.
                             ''',
 
