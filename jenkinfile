@@ -23,7 +23,7 @@ pipeline {
     vaultSecrets: [
         
         ]
-    ]
+    
 )
 {
                     // Once authenticated, run your CLI script
