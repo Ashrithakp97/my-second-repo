@@ -21,7 +21,7 @@ pipeline {
                     script {
                         def result = sh(
 
-                            script: '''    // This is a multi-line shell script.
+                            script: '''    
 
                                 export VAULT_ADDR=${VAULT_ADDR}    //Exports the VAULT_ADDR environment variable so it's available to the shell.
                                 export VAULT_ROLE_ID=${VAULT_ROLE_ID}
