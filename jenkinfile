@@ -16,7 +16,9 @@ pipeline {
       steps {
         withVault(
           configuration: [vaultUrl: "${env.VAULT_ADDR}"],
-          credentialsId: 'testing'
+          credentialsId: 'testing',
+    vaultSecrets: [
+        ]
         ) {
           sh 'chmod +x vault_create_secret.sh && ./vault_create_secret.sh'
         }
