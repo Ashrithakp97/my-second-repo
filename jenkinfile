@@ -21,12 +21,7 @@ pipeline {
         vaultUrl: "${VAULT_ADDR}"
     ],
     vaultSecrets: [
-        [
-            path: 'approle',
-            secretValues: [
-                [envVar: 'VAULT_ROLE_ID', vaultKey: 'role_id'],
-                [envVar: 'VAULT_SECRET_ID', vaultKey: 'secret_id']
-            ]
+        
         ]
     ]
 )
