@@ -14,10 +14,9 @@ pipeline {
         stage('Create Vault Secret') {
             steps {
 
-                withVault( 
- configuration: [
-                vaultCredentialId: 'testing'  
-            ]  
+                withVault
+( 
+                vaultCredentialId: 'testing'   
 )
 {
                     script {
