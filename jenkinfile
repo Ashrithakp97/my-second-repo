@@ -30,7 +30,7 @@ pipeline {
 
     configuration: [
 
-        vaultCredentialId: 'testing',
+        vaultCredentialId: 'tech',
 
         vaultUrl: "${VAULT_ADDR}"
 
