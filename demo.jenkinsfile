@@ -19,6 +19,8 @@ pipeline {
                     configuration: [
                         vaultCredentialId: 'tech',
                         vaultUrl: "${env.VAULT_ADDR}"
+                    ],
+                    vaultSecrets: [
                     ]
                 ) 
                 {
