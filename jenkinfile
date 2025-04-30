@@ -51,6 +51,7 @@ pipeline {
                             script: '''
                                 sh './vault_create_secret.sh'
 
+                            ''',
                             returnStatus: true  
 
                         )
