@@ -5,7 +5,7 @@ VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id="Role ID" secr
 export VAULT_TOKEN
 echo "Writing secret to Vault using token from Jenkins..."
 
-vault kv put secret/data/myapp/config username=admin password=123456
+vault write secret/myapp config=username=ashritha password=secure123 token=$VAULT_TOKEN
 
 SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
  
