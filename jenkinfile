@@ -19,8 +19,9 @@ pipeline {
                         // Run your script with VAULT_TOKEN automatically injected
                         sh '''
                             echo "Writing secret to Vault using token from Jenkins..."
-                            chmod +x vault_create_secret.sh
-                            ./vault_create_secret.sh
+vault write secret/myapp config=username=ashritha password=secure123 token=$VAULT_TOKEN
+                            //chmod +x vault_create_secret.sh
+                          //  ./vault_create_secret.sh
                         '''
                     }
                 }
