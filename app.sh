@@ -2,8 +2,8 @@
 set -e
 set -x
 echo "Using Vault Token: $VAULT_TOKEN"
-
-vault kv put secret/app/test username="Ashritha" password="1234"
+vault login "$VAULT_TOKEN"
+#vault kv put secret/app/test username="Ashritha" password="1234"
 
 SECRET_OUTPUT=$(vault kv get -field=username secret/app/test)
 
