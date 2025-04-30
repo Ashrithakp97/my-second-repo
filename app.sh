@@ -7,7 +7,7 @@ echo "Logging into Vault using AppRole..."
 # receiving an access pass (the token), which you save in the variable VAULT_TOKEN.
 #export VAULT_TOKEN
  
-vault kv put secret/data/app/test username="Ashritha" password="1234"
+vault kv put secret/app/test username="Ashritha" password="1234"
  
 SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
  
