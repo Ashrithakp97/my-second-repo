@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withVault(
                     configuration: [
-                        vaultCredentialId: 'tech',
+                        vaultCredentialId: 'token',
                         vaultUrl: "${env.VAULT_ADDR}"
                     ],
                     vaultSecrets: [
