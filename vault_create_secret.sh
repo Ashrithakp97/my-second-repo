@@ -3,7 +3,7 @@ set -e
 
 echo "Writing secret to Vault using token from Jenkins..."
 
-vault kv put secret/myapp/config username="Ashritha" password="1234"
+vault kv put secret/data/myapp/config username=admin password=123456
 
 SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
  
