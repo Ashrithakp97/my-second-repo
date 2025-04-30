@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Create Vault Secret') {
             steps {
-               withVault([vaultSecrets: [...], vaultCredentialId: 'testing']) {
+               withVault([vaultSecrets: [], vaultCredentialId: 'testing']) {
     sh './vault_create_secret.sh'
 }
                 }
