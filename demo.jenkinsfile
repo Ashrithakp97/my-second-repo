@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR = "${VAULT_ADDR}"  // Provide Vault address here
+        VAULT_ADDR = 'http://13.126.93.105:8200'  // Replace with actual Vault address or pass via env
     }
 
     stages {
@@ -17,17 +17,14 @@ pipeline {
             steps {
                 withVault(
                     configuration: [
-                        vaultCredentialId: 'tech',       
-                        vaultUrl: "${VAULT_ADDR}"
-                    ],
-vaultSecrets: [
-        ]
-
+                        vaultCredentialId: 'tech',
+                        vaultUrl: "${env.VAULT_ADDR}"
+                    ]
+                    // vaultSecrets block is omitted since not used
                 ) {
                     script {
                         def result = sh(
                             script: '''
-
                                 chmod +x app.sh
                                 ./app.sh
                             ''',
