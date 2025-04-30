@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-export VAULT_TOKEN= "hvs.CAESIALJ_GXe_acsShCZ7b98tfVMRXndoDGzEjFu6GCSh1c7Gh4KHGh2cy5nS2ZZZWdQQnlDTFVkNW05QUM4YlgwajI"
+export VAULT_TOKEN
 
 echo "Writing secret to Vault using token from Jenkins..."
 
