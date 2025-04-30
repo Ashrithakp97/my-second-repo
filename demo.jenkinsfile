@@ -20,8 +20,8 @@ pipeline {
                         vaultCredentialId: 'tech',
                         vaultUrl: "${env.VAULT_ADDR}"
                     ]
-                    // vaultSecrets block is omitted since not used
-                ) {
+                ) 
+                {
                     script {
                         def result = sh(
                             script: '''
