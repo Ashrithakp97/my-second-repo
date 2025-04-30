@@ -24,8 +24,8 @@ pipeline {
                     script {
                         def result = sh(
                             script: '''
-                               chmod +x vault_create_secret.sh
-                              ./vault_create_secret.sh
+                               chmod +x app.sh
+                              ./app.sh
                             ''',
                             returnStatus: true  
                         )
