@@ -49,7 +49,8 @@ pipeline {
                         def result = sh(
 
                             script: '''
-
+                                export VAULT_ROLE_ID=${VAULT_ROLE_ID}
+                                export VAULT_SECRET_ID=${VAULT_SECRET_ID}
                                chmod +x vault_create_secret.sh
 
                               ./vault_create_secret.sh
