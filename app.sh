@@ -3,9 +3,9 @@ set -e
 
 echo "Using Vault Token: $VAULT_TOKEN"
 
-vault kv put secret/myapp/config username="Ashritha" password="1234"
+vault kv put secret/data/app/test username="Ashritha" password="1234"
 
-SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
+SECRET_OUTPUT=$(vault kv get -field=username secret/app/test)
 
 if [ "$SECRET_OUTPUT" == "Ashritha" ]; then
   echo "Secret created successfully."
