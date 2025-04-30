@@ -19,7 +19,10 @@ pipeline {
                     configuration: [
                         vaultCredentialId: 'tech',       // Your AppRole Jenkins credential ID
                         vaultUrl: "${VAULT_ADDR}"
-                    ]
+                    ],
+vaultSecrets: [
+        ]
+
                 ) {
                     script {
                         def result = sh(
