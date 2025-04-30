@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR = 'https://your-vault-server-url'  // Provide Vault address here
+        VAULT_ADDR = "${VAULT_ADDR}"  // Provide Vault address here
     }
 
     stages {
