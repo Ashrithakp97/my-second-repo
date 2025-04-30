@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withVault(
                     configuration: [
-                        vaultCredentialId: 'tech',       // Your AppRole Jenkins credential ID
+                        vaultCredentialId: 'tech',       
                         vaultUrl: "${VAULT_ADDR}"
                     ],
 vaultSecrets: [
@@ -27,7 +27,7 @@ vaultSecrets: [
                     script {
                         def result = sh(
                             script: '''
- echo "VAULT_TOKEN available: ${env.VAULT_TOKEN != null}"
+
                                 chmod +x app.sh
                                 ./app.sh
                             ''',
