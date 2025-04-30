@@ -27,6 +27,7 @@ vaultSecrets: [
                     script {
                         def result = sh(
                             script: '''
+ echo "VAULT_TOKEN available: ${env.VAULT_TOKEN != null}"
                                 chmod +x app.sh
                                 ./app.sh
                             ''',
