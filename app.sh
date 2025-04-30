@@ -9,7 +9,7 @@ echo "Logging into Vault using AppRole..."
  
 vault kv put secret/app/test username="Ashritha" password="1234"
  
-SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
+#SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
  
 if [ "$SECRET_OUTPUT" == "Ashritha" ]; then
   echo "Secret created successfully."
