@@ -24,7 +24,7 @@ pipeline {
                     script {
                         def result = sh(
                             script: '''
-                               chmod +x app.sh
+                            
                               ./app.sh
                             ''',
                             returnStatus: true  
