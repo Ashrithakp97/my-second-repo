@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-set -x
+
 echo "Using Vault Token: $VAULT_TOKEN"
 vault print token
 vault kv put secret/app/test username="utrfghj" password="1234"
