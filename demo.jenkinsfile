@@ -23,8 +23,11 @@ pipeline {
                          ) {  
 
                     sh '''
+                        echo "VAULT_ADDR=$VAULT_ADDR"
                         echo "Vault Token: $VAULT_TOKEN"
                         export VAULT_TOKEN=$VAULT_TOKEN
+                        env | grep VAULT
+                        chmod +x app.sh
                         ./app.sh
                     '''
                 }
