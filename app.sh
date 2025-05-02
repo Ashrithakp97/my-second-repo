@@ -3,7 +3,7 @@ set -e
 
 echo "Using Vault Token: $VAULT_TOKEN"
 vault print token
-vault kv put secret/app/test username="utrfghj" password="1234"
+vault kv put secret/app/test username="Ashritha" password="1234"
 
 #SECRET_OUTPUT=$(vault kv get -field=username secret/app/test)
 
