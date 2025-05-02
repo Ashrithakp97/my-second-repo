@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                git url: 'https://github.com/Ashrithakp97/my-second-repo.git'
+                url: 'https://github.com/Ashrithakp97/my-second-repo.git'
             }
         }
 
