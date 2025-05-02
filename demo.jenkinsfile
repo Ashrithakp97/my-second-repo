@@ -2,65 +2,43 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR = 'http://65.2.69.108:8200'  // Replace with actual Vault address or pass via env
+        VAULT_ADDR = 'http://65.2.69.108:8200' 
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
+                git url: 'https://github.com/Ashrithakp97/my-second-repo.git'
             }
         }
 
-        stage('Create Vault Secret') {
+        stage('Enable Vault Secrets Engine') {
             steps {
-                withVault(
-                    configuration: [
-                        vaultCredentialId: 'tech',
-                        vaultUrl: "${env.VAULT_ADDR}"
-                    ],
-                    vaultSecrets: [
-                    ]
-                ) 
-                {
-                    script {
-                        def result = sh(
-                            script: '''
-                                chmod +x app.sh
-                                ./app.sh
-                            ''',
-                            returnStatus: true
-                        )
-                        if (result == 0) {
-                            echo "Vault secret creation successful."
-                            currentBuild.result = 'SUCCESS'
-                        } else {
-                            echo "Vault secret creation failed."
-                            currentBuild.result = 'FAILURE'
-                        }
-                    }
+                withVault([vaultSecrets: [],
+                           vaultUrl: "${env.VAULT_ADDR}",
+                           vaultCredentialId: 'tech']) { 
+
+                    sh '''
+                        echo "Vault Token: $VAULT_TOKEN"
+                        export VAULT_TOKEN=$VAULT_TOKEN
+                        ./app.sh
+                    '''
                 }
             }
         }
     }
 
     post {
-        always {
-            emailext(
-                subject: "Vault Secret Creation Job: ${currentBuild.result}",
-                body: """
-                    Hello,
-
-                    Vault Secret creation Job Status: ${currentBuild.result}.
-                    
-                    Please check Jenkins logs for details.
-
-                    Regards,
-                    Jenkins
-                """,
-                to: 'ashrithakp97@gmail.com'
-            )
+        success {
+            emailext subject: 'Vault Setup Successful',
+                     body: 'The KV engine was enabled successfully.',
+                     to: 'ashrithakp97@gmail.com'
+        }
+        failure {
+            emailext subject: 'Vault Setup Failed',
+                     body: 'There was a failure in the Vault setup pipeline.',
+                     to: 'ashrithakp97@gmail.com'
         }
     }
 }
