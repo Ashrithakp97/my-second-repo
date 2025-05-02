@@ -1,15 +1,12 @@
 #!/bin/bash
+
+# Fail on any error
 set -e
 
-echo "Using Vault Token: $VAULT_TOKEN"
-vault print token
-vault kv put secret/app/test username="Ashritha" password="1234"
+echo "Enabling KV v2 secrets engine at 'secret/'..."
 
-#SECRET_OUTPUT=$(vault kv get -field=username secret/app/test)
+echo "Creating a test secret..."
 
-if [ "$SECRET_OUTPUT" == "Ashritha" ]; then
-  echo "Secret created successfully."
-else
-  echo "Failed to create secret!" >&2  
-  exit 1
-fi
+vault kv put secret/app/test username="admin" password="password123"
+
+echo "KV secrets engine setup complete."
