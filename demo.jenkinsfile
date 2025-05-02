@@ -8,8 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/Ashrithakp97/my-second-repo.git'
+                 git branch: 'main',
+                 url: 'https://github.com/Ashrithakp97/my-second-repo.git'
             }
         }
 
@@ -20,13 +20,12 @@ pipeline {
                            vaultCredentialId: 'tech',
                            vaultUrl: "${env.VAULT_ADDR}"],
                            vaultSecrets: []
-                         ) { 
+                         ) {  
 
                     sh '''
                         echo "Vault Token: $VAULT_TOKEN"
                         export VAULT_TOKEN=$VAULT_TOKEN
-                        chmod +x app.sh
-                        ./app.sh
+                        ./setup.sh
                     '''
                 }
             }
