@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR = 'http://13.126.93.105:8200'  // Replace with actual Vault address or pass via env
+        VAULT_ADDR = 'http://65.2.69.108:8200'  // Replace with actual Vault address or pass via env
     }
 
     stages {
