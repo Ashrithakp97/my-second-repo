@@ -25,7 +25,7 @@ pipeline {
                     sh '''
                         echo "Vault Token: $VAULT_TOKEN"
                         export VAULT_TOKEN=$VAULT_TOKEN
-                        ./setup.sh
+                        ./app.sh
                     '''
                 }
             }
