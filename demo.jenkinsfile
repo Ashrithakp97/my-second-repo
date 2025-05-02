@@ -18,7 +18,7 @@ pipeline {
                 withVault(
                     configuration:[    
                            vaultCredentialId: 'vault-jenkins-role',
-                           vaultUrl: "${env.VAULT_ADDR}"],
+                          // vaultUrl: "${env.VAULT_ADDR}"],
                            vaultSecrets: []
                          ) {  
 
