@@ -1,15 +1,14 @@
 pipeline {
     agent any
 
-    environment {
-        GIT_REPO = 'https://github.com/your-user/your-repo.git'
-        VAULT_ADDR = 'http://127.0.0.1:8200'
+      environment {
+        VAULT_ADDR="${VAULT_ADDR}" // Still asking Vault address from user
     }
-
     stages {
-        stage('Clone Script Repo') {
+        stage('Checkout') {
             steps {
-                sh 'git clone ${GIT_REPO} vault-scripts'
+                git branch: 'main',
+                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
             }
         }
 
@@ -18,11 +17,11 @@ pipeline {
                 withVault(
                     configuration: [
                         vaultUrl: "${VAULT_ADDR}",
-                        vaultCredentialId: 'vault-jenkins-role', // Configured in Jenkins Credentials (AppRole)
+                        vaultCredentialId: 'vault-jenkins-role', 
                         engineVersion: 2
                     ],
                     vaultSecrets: [[
-                        path: 'secret/myapp',
+                        path: 'ashi/techapp',
                         secretValues: [
                             [envVar: 'USERNAME', vaultKey: 'username'],
                             [envVar: 'PASSWORD', vaultKey: 'password']
