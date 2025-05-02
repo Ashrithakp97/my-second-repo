@@ -2,7 +2,7 @@
 
 # Fail on any error
 set -e
-
+vault login <admin_token>
 echo "Creating a test secret..."
 vault secrets enable -path=sun -version=2 kv
 
