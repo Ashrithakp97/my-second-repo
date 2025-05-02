@@ -25,7 +25,7 @@ pipeline {
 
                     sh '''
                         echo "VAULT_ADDR=$VAULT_ADDR"
-                        echo "Vault Token: hvs.CAESIFA9diGjjWdiRoIHU-t-9A6Gv1FvBPQ16WNA0h8A4VDUGh4KHGh2cy5tbm5SNnlUWWM2aENLQTdOQTE2ZFkwVjg"
+                        echo "Vault Token:$VAULT_TOKEN"
                         export VAULT_TOKEN=$VAULT_TOKEN
                         chmod +x app.sh
                         ./app.sh
