@@ -3,7 +3,7 @@
 # Fail on any error
 set -e
 echo "Vault token is: $VAULT_TOKEN"
-vault login "$VAULT_TOKEN"
+vault login "hvs.CAESIFA9diGjjWdiRoIHU-t-9A6Gv1FvBPQ16WNA0h8A4VDUGh4KHGh2cy5tbm5SNnlUWWM2aENLQTdOQTE2ZFkwVjg"
 echo "Creating a test secret..."
 vault secrets enable -path=sun -version=2 kv
 
