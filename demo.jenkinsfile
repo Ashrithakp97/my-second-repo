@@ -15,9 +15,12 @@ pipeline {
 
         stage('Enable Vault Secrets Engine') {
             steps {
-                withVault([vaultSecrets: [],
-                           vaultUrl: "${env.VAULT_ADDR}",
-                           vaultCredentialId: 'tech']) { 
+                withVault(
+                    configuration:[    
+                           vaultCredentialId: 'tech',
+                           vaultUrl: "${env.VAULT_ADDR}"],
+                           vaultSecrets: []
+                         ) { 
 
                     sh '''
                         echo "Vault Token: $VAULT_TOKEN"
