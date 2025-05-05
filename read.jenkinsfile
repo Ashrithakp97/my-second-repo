@@ -21,7 +21,7 @@ pipeline {
                         engineVersion: 2
                     ],
                     vaultSecrets: [[
-                        path: 'ashi/techapp',
+                        path: 'test/myapp',
                         secretValues: [
                             [envVar: 'USERNAME', vaultKey: 'username'],
                             [envVar: 'PASSWORD', vaultKey: 'password']
