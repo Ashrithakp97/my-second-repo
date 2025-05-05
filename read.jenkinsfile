@@ -44,8 +44,8 @@ pipeline {
                     script '''
                        chmod +x vault_create_secret.sh
                        ./vault_create_secret.sh
-                    ''',
-                
+                    '''
+                }
             }
         }
     }
