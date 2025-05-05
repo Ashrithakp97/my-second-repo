@@ -40,7 +40,7 @@ pipeline {
 
         stage('Run Vault CLI Script') {
             steps {
-                dir('vault-read-cred') {
+                 {
                     script {
                     sh '''
                     chmod +x vault-read.sh
