@@ -43,7 +43,7 @@ pipeline {
                     chmod +x vault_create_secret.sh
                     ./vault_create_secret.sh > cli-output.log 2>&1'
                     sh 'cat cli-output.log'
-                ''',
+                '''
             }
         }
     }
