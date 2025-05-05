@@ -2,7 +2,7 @@
 
 # Fail on any error
 set -e
-export VAULT_ADDR="http://65.2.69.108:8200"
+export VAULT_ADDR="http://13.200.229.207:8200/"
 
 export VAULT_TOKEN=$(cat ./vault_token.txt)
 #vault login "hvs.CAESIFA9diGjjWdiRoIHU-t-9A6Gv1FvBPQ16WNA0h8A4VDUGh4KHGh2cy5tbm5SNnlUWWM2aENLQTdOQTE2ZFkwVjg"
