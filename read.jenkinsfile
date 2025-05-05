@@ -41,7 +41,7 @@ pipeline {
         stage('Run Vault CLI Script') {
             steps {
                 dir('vault-read-cred') {
-                    script: '''
+                    script '''
                        chmod +x vault_create_secret.sh
                        ./vault_create_secret.sh
                     ''',
