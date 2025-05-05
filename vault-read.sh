@@ -1,35 +1,16 @@
 #!/bin/bash
+# vault-read.sh
 
-# Set Vault address
-VAULT_ADDR='http://13.200.229.207:8200'
+VAULT_ADDR='http://127.0.0.1:8200'
+ROLE_ID='your-role-id'
+SECRET_ID='your-secret-id'
 
-# These will be passed in or set as environment variables from Jenkins
-ROLE_ID="$ROLE_ID"
-SECRET_ID="$SECRET_ID"
+# Log in to Vault with AppRole
+VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id="$ROLE_ID" secret_id="$SECRET_ID")
 
-# Check if required tools exist
-if ! command -v vault &> /dev/null || ! command -v jq &> /dev/null; then
-  echo "Vault CLI and jq must be installed."
-  exit 1
-fi
+# Export token
+export VAULT_TOKEN
+export VAULT_ADDR
 
-# Login to Vault using AppRole
-echo "Logging into Vault..."
-LOGIN_RESPONSE=$(vault write -format=json auth/approle/login role_id="$ROLE_ID" secret_id="$SECRET_ID")
-
-# Extract Vault token
-VAULT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.auth.client_token')
-
-echo "Successfully logged in to Vault."
-
-# Read secret from KV v2 path
-SECRET_PATH="test/data/myapp" # For KV v2
-SECRET_JSON=$(vault read -format=json -address=$VAULT_ADDR -token=$VAULT_TOKEN "$SECRET_PATH")
-
-# Parse values
-USERNAME=$(echo "$SECRET_JSON" | jq -r '.data.data.username')
-PASSWORD=$(echo "$SECRET_JSON" | jq -r '.data.data.password')
-
-echo "Vault Username: $USERNAME"
-echo "Vault Password: $PASSWORD"
-
+# Read secret
+vault kv get -format=json kv/mysecret
