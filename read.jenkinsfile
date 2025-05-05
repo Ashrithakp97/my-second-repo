@@ -32,7 +32,7 @@ pipeline {
                         echo "From Vault Plugin:"
                         echo "USERNAME=$USERNAME"
                         echo "PASSWORD=$PASSWORD"
-                    '''
+                    ''',
                 }
             }
         }
