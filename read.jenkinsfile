@@ -42,8 +42,7 @@ pipeline {
             steps {
                 dir('vault-read-cred') {
                     sh 'chmod +x vault-read.sh'
-                    sh './vault-read.sh > cli-output.log 2>&1'
-                    sh 'cat cli-output.log'
+                    sh './vault-read.sh 
                 }
             }
         }
