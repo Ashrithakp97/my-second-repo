@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set Vault address
-VAULT_ADDR='http://127.0.0.1:8200'
+VAULT_ADDR='http://13.200.229.207:8200'
 
 # These will be passed in or set as environment variables from Jenkins
 ROLE_ID="$ROLE_ID"
@@ -23,7 +23,7 @@ VAULT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.auth.client_token')
 echo "Successfully logged in to Vault."
 
 # Read secret from KV v2 path
-SECRET_PATH="secret/data/myapp" # For KV v2
+SECRET_PATH="test/data/myapp" # For KV v2
 SECRET_JSON=$(vault read -format=json -address=$VAULT_ADDR -token=$VAULT_TOKEN "$SECRET_PATH")
 
 # Parse values
