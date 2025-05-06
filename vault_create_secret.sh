@@ -9,7 +9,7 @@ export VAULT_TOKEN
  
 vault kv put test/myapp username="Ashritha" password="1234"
  
-SECRET_OUTPUT=$(vault kv get -field=username secret/myapp/config)
+SECRET_OUTPUT=$(vault kv get -field=username test/myapp)
  
 if [ "$SECRET_OUTPUT" == "Ashritha" ]; then
   echo "Secret created successfully."
