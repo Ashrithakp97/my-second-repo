@@ -22,7 +22,7 @@ pipeline {
                         engineVersion: 2
                     ],
                     vaultSecrets: [[
-                        path: 'test/myapp',
+                        path: 'secret/myapp/config',
                         secretValues: [
                             [envVar: 'USERNAME', vaultKey: 'username'],
                             [envVar: 'PASSWORD', vaultKey: 'password']
