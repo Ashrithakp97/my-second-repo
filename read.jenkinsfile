@@ -2,16 +2,23 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR="${VAULT_ADDR}"
+       VAULT_ADDR="${VAULT_ADDR}"
     }
 
     stages {
-        stage('Read Vault Secret using CLI') {
+        stage('Clone Script Repo') {
+            steps {
+               git branch: 'main',
+                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
+            }
+        }
+
+        stage('Use Vault Plugin') {
             steps {
                 withVault(
                     configuration: [
-                        vaultCredentialId: 'readcre', // Your Jenkins credentials ID
-                        vaultUrl:  "${VAULT_ADDR}",
+                        vaultUrl: "${VAULT_ADDR}",
+                        vaultCredentialId: 'readcre',
                         engineVersion: 2
                     ],
                     vaultSecrets: [[
@@ -21,12 +28,22 @@ pipeline {
                             [envVar: 'PASSWORD', vaultKey: 'password']
                         ]
                     ]]
-
                 ) {
                     sh '''
-                        echo "Running Vault CLI read script..."
-                        chmod +x vault-read.sh
-                        ./vault-read.sh
+                        echo "From Vault Plugin:"
+                        echo "USERNAME=$USERNAME"
+                        echo "PASSWORD=$PASSWORD"
+                    '''
+                }
+            }
+        }
+
+        stage('Run Vault CLI Script') {
+            steps {
+                    script {
+                    sh '''
+                    chmod +x vault-read.sh
+                    ./vault-read.sh
                     '''
                 }
             }
