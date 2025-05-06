@@ -23,7 +23,7 @@ VAULT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.auth.client_token')
 echo "Successfully logged in to Vault."
 
 # Read secret from KV v2 path
-SECRET_PATH="test/data/myapp" # For KV v2
+SECRET_PATH="secret/data/myapp/config" # For KV v2
 SECRET_JSON=$(vault read -format=json -address=$VAULT_ADDR -token=$VAULT_TOKEN "$SECRET_PATH")
 
 # Parse values
