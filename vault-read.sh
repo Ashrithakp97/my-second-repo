@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set Vault address
-VAULT_ADDR='http://43.204.148.64:8200'
+VAULT_ADDR='http://3.109.202.49:8200'
 
 # These will be passed in or set as environment variables from Jenkins
 ROLE_ID="$ROLE_ID"
