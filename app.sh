@@ -25,7 +25,7 @@ VAULT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.auth.client_token')
 #export VAULT_TOKEN=$(cat ./vault_token.txt)
 #vault login "hvs.CAESIFA9diGjjWdiRoIHU-t-9A6Gv1FvBPQ16WNA0h8A4VDUGh4KHGh2cy5tbm5SNnlUWWM2aENLQTdOQTE2ZFkwVjg"
 echo "Creating a test secret..."
-vault secrets enable -path=tech -version=2 kv
+#vault secrets enable -path=tech -version=2 kv
 
 vault kv put sun/testing username="admin" password="123"
 
