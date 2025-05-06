@@ -13,7 +13,15 @@ pipeline {
                         vaultCredentialId: 'readcre', // Your Jenkins credentials ID
                         vaultUrl:  "${VAULT_ADDR}",
                         engineVersion: 2
-                    ]
+                    ],
+                    vaultSecrets: [[
+                        path: 'secret/myapp/config',
+                        secretValues: [
+                            [envVar: 'USERNAME', vaultKey: 'username'],
+                            [envVar: 'PASSWORD', vaultKey: 'password']
+                        ]
+                    ]]
+
                 ) {
                     sh '''
                         echo "Running Vault CLI read script..."
