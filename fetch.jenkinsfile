@@ -21,7 +21,8 @@ pipeline {
                 ]) {
                     sh '''
                         export VAULT_ADDR=$VAULT_ADDR
-                        ./vault_setup.sh
+                        chmod +x createsec.sh
+                        ./createsec.sh
                     '''
                 }
             }
