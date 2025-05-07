@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        VAULT_ADDR = 'http://3.109.2.146:8200'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
+            }
+        }
+
+        stage('Login and Create Vault Secret') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'VAULT_ROLE_ID', variable: 'VAULT_ROLE_ID'),
+                    string(credentialsId: 'VAULT_SECRET_ID', variable: 'VAULT_SECRET_ID')
+                ]) {
+                    sh '''
+                        export VAULT_ADDR=$VAULT_ADDR
+                        ./vault_setup.sh
+                    '''
+                }
+            }
+        }
+
+        stage('Read Secret using Vault Plugin') {
+            steps {
+                withVault([
+                    configuration: [vaultUrl: "${env.VAULT_ADDR}", vaultCredentialId: 'readcre'],
+                    vaultSecrets: [[
+                        path: 'secret/myapp/config',
+                        secretValues: [
+                            [envVar: 'USERNAME', vaultKey: 'username'],
+                            [envVar: 'PASSWORD', vaultKey: 'password']
+                        ]
+                    ]]
+                ]) {
+                    sh '''
+                        echo "Vault secret fetched:"
+                        echo "Username: $USERNAME"
+                        echo "Password: $PASSWORD"
+                    '''
+                }
+            }
+        }
+    }
+}
