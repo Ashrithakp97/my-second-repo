@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR = 'http://13.203.210.143:8200'
+        VAULT_ADDR = '"${VAULT_ADDR}"'
     }
 
     stages {
