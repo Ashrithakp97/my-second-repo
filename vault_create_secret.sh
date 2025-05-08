@@ -3,7 +3,7 @@ set -e
  
 echo "Logging into Vault using AppRole..."
 # by using role id and secret id vault is logged in
- wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [[password: "${VAULT_ADDR}", var: 'C_VAULT_ADDR']]])
+
 VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id="$VAULT_ROLE_ID" secret_id="$VAULT_SECRET_ID")
 # receiving an access pass (the token), which you save in the variable VAULT_TOKEN.
 export VAULT_TOKEN
