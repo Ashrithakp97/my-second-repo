@@ -21,7 +21,8 @@ pipeline {
                         def result = sh(
  
                             script: '''
-                                export VAULT_ADDR=${VAULT_ADDR}    
+                                export VAULT_ADDR=${VAULT_ADDR}   
+                                wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [[password: "${VAULT_ADDR}", var: 'C_VAULT_ADDR']]])
                                 export VAULT_ROLE_ID=${VAULT_ROLE_ID}
                                 export VAULT_SECRET_ID=${VAULT_SECRET_ID}
                                 bash vault_create_secret.sh        
