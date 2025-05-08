@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VAULT_ADDR = '"${VAULT_ADDR}"'
+        VAULT_ADDR = "${VAULT_ADDR}"
     }
 
     stages {
