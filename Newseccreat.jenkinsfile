@@ -2,51 +2,47 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'SECRET_PATH', defaultValue: 'secret/myapp/config', description: 'Vault secret path')
-        string(name: 'SECRET_KEY1', defaultValue: 'username', description: 'First key')
-        string(name: 'SECRET_VAL1', defaultValue: 'ashri', description: 'First value')
-        string(name: 'SECRET_KEY2', defaultValue: 'password', description: 'Second key')
-        string(name: 'SECRET_VAL2', defaultValue: '123', description: 'Second value')
+        string(name: 'SECRET_PATH', defaultValue: 'secret/myapp/config')
+        string(name: 'SECRET_KEY1', defaultValue: 'username')
+        string(name: 'SECRET_VAL1', defaultValue: 'ashri')
+        string(name: 'SECRET_KEY2', defaultValue: 'password')
+        string(name: 'SECRET_VAL2', defaultValue: '123')
     }
 
     environment {
-        VAULT_ADDR = "${VAULT_ADDR}"
+        VAULT_ADDR = "${env.VAULT_ADDR}"
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/Ashrithakp97/my-second-repo.git'
-            }
-        }
-
-        stage('Login and Create Vault Secret') {
+        stage('Call Secret Creation Job') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'VAULT_ROLE_ID', variable: 'VAULT_ROLE_ID'),
-                    string(credentialsId: 'VAULT_SECRET_ID', variable: 'VAULT_SECRET_ID')
+                    string(credentialsId: 'VAULT_ROLE_ID', variable: 'ROLE_ID'),
+                    string(credentialsId: 'VAULT_SECRET_ID', variable: 'SECRET_ID')
                 ]) {
-                    sh '''
-                        export VAULT_ADDR=$VAULT_ADDR
-                        chmod +x createsec.sh
-                        ./createsec.sh "$VAULT_ROLE_ID" "$VAULT_SECRET_ID" "$SECRET_PATH" "$SECRET_KEY1" "$SECRET_VAL1" "$SECRET_KEY2" "$SECRET_VAL2"
-                    '''
+                    build job: 'Sub-Job-CreateSecret', parameters: [
+                        string(name: 'ROLE_ID', value: env.ROLE_ID),
+                        string(name: 'SECRET_ID', value: env.SECRET_ID),
+                        string(name: 'SECRET_PATH', value: params.SECRET_PATH),
+                        string(name: 'KEY1', value: params.SECRET_KEY1),
+                        string(name: 'VAL1', value: params.SECRET_VAL1),
+                        string(name: 'KEY2', value: params.SECRET_KEY2),
+                        string(name: 'VAL2', value: params.SECRET_VAL2)
+                    ]
                 }
             }
         }
 
         stage('Read Secret using Vault Plugin') {
             steps {
-                withVault([
-                    configuration: [vaultUrl: "${env.VAULT_ADDR}", vaultCredentialId: 'readcre'],
-                    vaultSecrets: [[
-                        path: "${params.SECRET_PATH}",
-                        secretValues: [
-                            [envVar: 'USERNAME', vaultKey: "${params.SECRET_KEY1}"],
-                            [envVar: 'PASSWORD', vaultKey: "${params.SECRET_KEY2}"]
-                        ]
-                    ]]
+                withVault([configuration: [vaultUrl: "${env.VAULT_ADDR}", vaultCredentialId: 'readcre'],
+                           vaultSecrets: [[
+                               path: "${params.SECRET_PATH}",
+                               secretValues: [
+                                   [envVar: 'USERNAME', vaultKey: "${params.SECRET_KEY1}"],
+                                   [envVar: 'PASSWORD', vaultKey: "${params.SECRET_KEY2}"]
+                               ]
+                           ]]
                 ]) {
                     sh '''
                         echo "Vault secret fetched:"
@@ -61,17 +57,8 @@ pipeline {
     post {
         always {
             emailext(
-                subject: "Vault Secret fetch",
-                body: """
-                    Hello,
-
-                    Vault Secret creation Job Status: done.
-                    Vault Secret fetch Job Status: done.
-                    Please check Jenkins logs for details.
-
-                    Regards,
-                    Jenkins
-                """,
+                subject: "Vault Job Status",
+                body: "Vault Secret creation and fetch jobs completed. Check Jenkins for logs.",
                 to: 'ashrithakp97@gmail.com'
             )
         }
