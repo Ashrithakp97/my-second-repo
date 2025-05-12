@@ -2,65 +2,30 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'SECRET_PATH', defaultValue: 'secret/myapp/config')
-        string(name: 'SECRET_KEY1', defaultValue: 'username')
-        string(name: 'SECRET_VAL1', defaultValue: 'ashri')
-        string(name: 'SECRET_KEY2', defaultValue: 'password')
-        string(name: 'SECRET_VAL2', defaultValue: '123')
-    }
-
-    environment {
-        VAULT_ADDR = "${env.VAULT_ADDR}"
+        string(name: 'VAULT_ADDR', defaultValue: 'https://vault.example.com:8200', description: 'Vault address')
+        string(name: 'ROLE_ID', defaultValue: 'role-id-example', description: 'AppRole ID')
+        string(name: 'SECRET_ID', defaultValue: 'secret-id-example', description: 'AppRole Secret ID')
+        string(name: 'SECRET_PATH', defaultValue: 'secret/myapp/config', description: 'Secret path')
+        string(name: 'KEY1', defaultValue: 'username', description: 'Key 1')
+        string(name: 'VAL1', defaultValue: 'admin', description: 'Value 1')
+        string(name: 'KEY2', defaultValue: 'password', description: 'Key 2')
+        string(name: 'VAL2', defaultValue: 'pass123', description: 'Value 2')
     }
 
     stages {
-        stage('Call Secret Creation Job') {
+        stage('Trigger Secret Creator Job') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'VAULT_ROLE_ID', variable: 'ROLE_ID'),
-                    string(credentialsId: 'VAULT_SECRET_ID', variable: 'SECRET_ID')
-                ]) {
-                    build job: 'Sub-Job-CreateSecret', parameters: [
-                        string(name: 'ROLE_ID', value: env.ROLE_ID),
-                        string(name: 'SECRET_ID', value: env.SECRET_ID),
-                        string(name: 'SECRET_PATH', value: params.SECRET_PATH),
-                        string(name: 'KEY1', value: params.SECRET_KEY1),
-                        string(name: 'VAL1', value: params.SECRET_VAL1),
-                        string(name: 'KEY2', value: params.SECRET_KEY2),
-                        string(name: 'VAL2', value: params.SECRET_VAL2)
-                    ]
-                }
+                build job: 'create-vault-secret', parameters: [
+                    string(name: 'VAULT_ADDR', value: params.VAULT_ADDR),
+                    string(name: 'ROLE_ID', value: params.ROLE_ID),
+                    string(name: 'SECRET_ID', value: params.SECRET_ID),
+                    string(name: 'SECRET_PATH', value: params.SECRET_PATH),
+                    string(name: 'KEY1', value: params.KEY1),
+                    string(name: 'VAL1', value: params.VAL1),
+                    string(name: 'KEY2', value: params.KEY2),
+                    string(name: 'VAL2', value: params.VAL2)
+                ]
             }
-        }
-
-        stage('Read Secret using Vault Plugin') {
-            steps {
-                withVault([configuration: [vaultUrl: "${env.VAULT_ADDR}", vaultCredentialId: 'readcre'],
-                           vaultSecrets: [[
-                               path: "${params.SECRET_PATH}",
-                               secretValues: [
-                                   [envVar: 'USERNAME', vaultKey: "${params.SECRET_KEY1}"],
-                                   [envVar: 'PASSWORD', vaultKey: "${params.SECRET_KEY2}"]
-                               ]
-                           ]]
-                ]) {
-                    sh '''
-                        echo "Vault secret fetched:"
-                        echo "Username: $USERNAME"
-                        echo "Password: $PASSWORD"
-                    '''
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            emailext(
-                subject: "Vault Job Status",
-                body: "Vault Secret creation and fetch jobs completed. Check Jenkins for logs.",
-                to: 'ashrithakp97@gmail.com'
-            )
         }
     }
 }
