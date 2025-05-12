@@ -1,18 +1,29 @@
-#!/bin/bash
-set -e
+pipeline {
+    agent any
 
-ROLE_ID=$1
-SECRET_ID=$2
-SECRET_PATH=$3
-KEY1=$4
-VAL1=$5
-KEY2=$6
-VAL2=$7
+    parameters {
+        string(name: 'ROLE_ID', description: 'Vault Role ID')
+        string(name: 'SECRET_ID', description: 'Vault Secret ID')
+        string(name: 'SECRET_PATH', description: 'Vault path')
+        string(name: 'KEY1', description: 'Key 1')
+        string(name: 'VAL1', description: 'Value 1')
+        string(name: 'KEY2', description: 'Key 2')
+        string(name: 'VAL2', description: 'Value 2')
+    }
 
-echo "Logging into Vault via AppRole..."
+    environment {
+        VAULT_ADDR = "${env.VAULT_ADDR}"
+    }
 
-VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id="$ROLE_ID" secret_id="$SECRET_ID")
-export VAULT_TOKEN
+    stages {
+        stage('Create Vault Secret') {
+            steps {
+                sh '''
+                    chmod +x createsec.sh
+                    ./createsec.sh "$ROLE_ID" "$SECRET_ID" "$SECRET_PATH" "$KEY1" "$VAL1" "$KEY2" "$VAL2"
+                '''
+            }
+        }
+    }
+}
 
-echo "Creating secret at $SECRET_PATH..."
-vault kv put "$SECRET_PATH" "$KEY1=$VAL1" "$KEY2=$VAL2"
