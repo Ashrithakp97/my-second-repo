@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Trigger Secret Creator Job') {
             steps {
-                build job: 'newsecretgen.jenkinsfile', parameters: [
+                build job: 'newsecretgen', parameters: [
                     string(name: 'VAULT_ADDR', value: params.VAULT_ADDR),
                     string(name: 'ROLE_ID', value: params.ROLE_ID),
                     string(name: 'SECRET_ID', value: params.SECRET_ID),
