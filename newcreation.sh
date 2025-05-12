@@ -2,28 +2,49 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'ROLE_ID', description: 'Vault Role ID')
-        string(name: 'SECRET_ID', description: 'Vault Secret ID')
-        string(name: 'SECRET_PATH', description: 'Vault path')
-        string(name: 'KEY1', description: 'Key 1')
-        string(name: 'VAL1', description: 'Value 1')
-        string(name: 'KEY2', description: 'Key 2')
-        string(name: 'VAL2', description: 'Value 2')
-    }
-
-    environment {
-        VAULT_ADDR = "${env.VAULT_ADDR}"
+        string(name: 'VAULT_ADDR', description: 'Vault address, e.g. https://vault.example.com:8200')
+        string(name: 'ROLE_ID', description: 'Vault AppRole Role ID')
+        string(name: 'SECRET_ID', description: 'Vault AppRole Secret ID')
+        string(name: 'SECRET_PATH', description: 'Path to store the secret (e.g., secret/myapp/config)')
+        string(name: 'KEY1', description: 'First secret key')
+        string(name: 'VAL1', description: 'First secret value')
+        string(name: 'KEY2', description: 'Second secret key')
+        string(name: 'VAL2', description: 'Second secret value')
     }
 
     stages {
-        stage('Create Vault Secret') {
+        stage('Login and Create Secret') {
             steps {
-                sh '''
-                    chmod +x createsec.sh
-                    ./createsec.sh "$ROLE_ID" "$SECRET_ID" "$SECRET_PATH" "$KEY1" "$VAL1" "$KEY2" "$VAL2"
-                '''
+                script {
+                    def login = sh(
+                        script: """
+                            curl -s --request POST --data '{ "role_id": "${params.ROLE_ID}", "secret_id": "${params.SECRET_ID}" }' \
+                            ${params.VAULT_ADDR}/v1/auth/approle/login | jq -r '.auth.client_token'
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Vault token obtained"
+
+                    def payload = """{
+                        "data": {
+                            "${params.KEY1}": "${params.VAL1}",
+                            "${params.KEY2}": "${params.VAL2}"
+                        }
+                    }"""
+
+                    writeFile file: 'payload.json', text: payload
+
+                    sh """
+                        curl -s --request POST --header "X-Vault-Token: ${login}" \
+                        --header "Content-Type: application/json" \
+                        --data @payload.json \
+                        ${params.VAULT_ADDR}/v1/${params.SECRET_PATH}
+                    """
+
+                    echo "Secret created at ${params.SECRET_PATH}"
+                }
             }
         }
     }
 }
-
