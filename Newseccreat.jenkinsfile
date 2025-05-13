@@ -5,7 +5,7 @@ pipeline {
         string(name: 'VAULT_ADDR', defaultValue: 'https://vault.example.com:8200', description: 'Vault address')
         credentials(name: 'ROLE_ID', defaultValue: '', description: 'AppRole ID')
         credentials(name: 'SECRET_ID', defaultValue: '', description: 'AppRole Secret ID')
-        string(name: 'SECRET_PATH', defaultValue: 'test/myapp', description: 'Secret path')
+        string(name: 'SECRET_PATH', defaultValue: 'secret/myapp/config', description: 'Secret path')
         string(name: 'KEY1', defaultValue: 'username', description: 'Key 1')
         string(name: 'VAL1', defaultValue: 'admin', description: 'Value 1')
         string(name: 'KEY2', defaultValue: 'password', description: 'Key 2')
