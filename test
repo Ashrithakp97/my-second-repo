@@ -16,15 +16,11 @@ pipeline {
         stage('Login and Create Secret') {
             steps {
                 script {
-                    def login = sh(
-                        sh: """
-                        curl -s --insecure --request POST \
-                        --header "Content-Type: application/json" \
-                        --data '{ "role_id": "${ROLE_ID}", "secret_id": "${SECRET_ID}" }' \
-                         ${params.VAULT_ADDR}/v1/auth/approle/login | jq -r '.auth.client_token'
-                          """,
-                        returnStdout: true
-                    ).trim()
+                    def response = 
+                        sh(script: """
+                        curl -s --request POST --data '{ "role_id": "${ROLE_ID}", "secret_id": "${SECRET_ID}" }' \
+                        ${params.VAULT_ADDR}/v1/auth/approle/login
+                    """, returnStdout: true).trim()
 
                     echo "Vault token obtained: $VAULT_TOKEN"
 
