@@ -23,8 +23,8 @@ pipeline {
                     """, returnStdout: true).trim()
 
                     echo "Vault token obtained: ${response}"
-                    echo ""
-                   jq .au
+                    echo "success"
+               
 
                     def payload = """{
                         "data": {
