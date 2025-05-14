@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'VAULT_ADDR', description: 'Vault address, e.g. https://vault.example.com:8200')
+        string(name: 'VAULT_ADDR', description: 'Vault address, e.g. http://52.66.179.95:8200')
         string(name: 'ROLE_ID', description: 'Vault AppRole Role ID')
         string(name: 'SECRET_ID', description: 'Vault AppRole Secret ID')
-        string(name: 'SECRET_PATH', description: 'Path to store the secret (e.g., secret/myapp/config)')
+        string(name: 'SECRET_PATH', description: 'Path to store the secret (e.g., secret/data/myapp/config)')
         string(name: 'KEY1', description: 'First secret key')
         string(name: 'VAL1', description: 'First secret value')
         string(name: 'KEY2', description: 'Second secret key')
@@ -16,16 +16,24 @@ pipeline {
         stage('Login and Create Secret') {
             steps {
                 script {
-                    def response = 
-                        sh(script: """
-                        curl -s --request POST --data '{ "role_id": "${ROLE_ID}", "secret_id": "${SECRET_ID}" }' \
-                        ${params.VAULT_ADDR}/v1/auth/approle/login
-                    """, returnStdout: true).trim()
+                    // AppRole login and extract token using jq
+                    def token = sh(
+                        script: """
+                        curl -s --request POST \\
+                            --header "Content-Type: application/json" \\
+                            --data '{ "role_id": "${params.ROLE_ID}", "secret_id": "${params.SECRET_ID}" }' \\
+                            ${params.VAULT_ADDR}/v1/auth/approle/login | jq -r '.auth.client_token'
+                        """,
+                        returnStdout: true
+                    ).trim()
 
-                    echo "Vault token obtained: ${response}"
-                    echo "success"
-                  
+                    if (!token || token == "null") {
+                        error("Failed to obtain Vault token. Check role_id and secret_id.")
+                    }
 
+                    echo "Vault token obtained: ${token.take(6)}..."
+
+                    // Build the JSON payload for the secret
                     def payload = """{
                         "data": {
                             "${params.KEY1}": "${params.VAL1}",
@@ -35,12 +43,14 @@ pipeline {
 
                     writeFile file: 'payload.json', text: payload
 
-                    // sh: """
-                    //     curl -s --request POST --header "X-Vault-Token: ${VAULT_TOKEN}" \
-                    //     --header "Content-Type: application/json" \
-                    //     --data @payload.json \
-                    //     ${params.VAULT_ADDR}/v1/${params.SECRET_PATH}
-                    // """
+                    // Write the secret to Vault
+                    sh """
+                        curl -s --request POST \\
+                            --header "X-Vault-Token: ${token}" \\
+                            --header "Content-Type: application/json" \\
+                            --data @payload.json \\
+                            ${params.VAULT_ADDR}/v1/${params.SECRET_PATH}
+                    """
 
                     echo "Secret created at ${params.SECRET_PATH}"
                 }
