@@ -17,10 +17,13 @@ pipeline {
             steps {
                 script {
                     def login = sh(
-                        script: """
-                         VAULT_TOKEN=$( curl -s --request POST --data '{ "role_id": "${params.ROLE_ID}", "secret_id": "${params.SECRET_ID}" }' \
-                            ${params.VAULT_ADDR}/v1/auth/approle/login | jq -r '.auth.client_token')
-                        """,
+                        sh """
+                        VAULT_TOKEN=\$( curl -s --request POST \
+                        --header 'Content-Type: application/json' \
+                        --data '{ "role_id": "${params.ROLE_ID}", "secret_id": "${params.SECRET_ID}" }' \
+                        ${params.VAULT_ADDR}/v1/auth/approle/login | jq -r '.auth.client_token' )
+                        echo Vault token is \$VAULT_TOKEN
+                       """,
                         returnStdout: true
                     ).trim()
 
