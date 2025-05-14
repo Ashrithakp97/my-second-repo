@@ -22,7 +22,7 @@ pipeline {
                         ${params.VAULT_ADDR}/v1/auth/approle/login
                     """, returnStdout: true).trim()
 
-                    echo "Vault token obtained: $VAULT_TOKEN"
+                    echo "Vault token obtained: ${response}"
 
                     def payload = """{
                         "data": {
