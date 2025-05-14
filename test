@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     def login = sh(
-                        sh """
+                        sh: """
                         curl -s --insecure --request POST \\
                         --header "Content-Type: application/json" \\
                         --data '{ "role_id": "${ROLE_ID}", "secret_id": "${SECRET_ID}" }' \\
@@ -37,7 +37,7 @@ pipeline {
 
                     writeFile file: 'payload.json', text: payload
 
-                    sh """
+                    sh: """
                         curl -s --request POST --header "X-Vault-Token: ${login}" \
                         --header "Content-Type: application/json" \
                         --data @payload.json \
